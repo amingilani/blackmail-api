@@ -10,10 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170203124849) do
+ActiveRecord::Schema.define(version: 20170203125005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "organizations", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.string   "uniq_name",  null: false
+    t.string   "domain",     null: false
+    t.integer  "user_id",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "slug"
+    t.index ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
+    t.index ["uniq_name"], name: "index_organizations_on_uniq_name", using: :btree
+    t.index ["user_id"], name: "index_organizations_on_user_id", using: :btree
+  end
+
+  create_table "reports", force: :cascade do |t|
+    t.integer  "organization_id"
+    t.date     "issue_date",                      null: false
+    t.boolean  "letters",         default: false, null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.index ["organization_id"], name: "index_reports_on_organization_id", using: :btree
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "provider",               default: "email", null: false
@@ -48,4 +70,6 @@ ActiveRecord::Schema.define(version: 20170203124849) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
   end
 
+  add_foreign_key "organizations", "users"
+  add_foreign_key "reports", "organizations"
 end
