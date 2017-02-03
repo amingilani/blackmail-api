@@ -39,12 +39,11 @@
 #  index_users_on_unlock_token          (unlock_token) UNIQUE
 #
 
-class User < ActiveRecord::Base
-  # Include default devise modules.
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :confirmable, :omniauthable
-  include DeviseTokenAuth::Concerns::User
-
-  has_many :organizations
+# frozen_string_literal: true
+FactoryGirl.define do
+  factory :user do
+    email                  { Faker::Internet.email }
+    password               'password'
+    password_confirmation  'password'
+  end
 end

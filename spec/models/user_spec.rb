@@ -39,12 +39,23 @@
 #  index_users_on_unlock_token          (unlock_token) UNIQUE
 #
 
-class User < ActiveRecord::Base
-  # Include default devise modules.
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :confirmable, :omniauthable
-  include DeviseTokenAuth::Concerns::User
+# frozen_string_literal: true
+require 'rails_helper'
 
-  has_many :organizations
+RSpec.describe User, type: :model do
+  let(:new_user) { FactoryGirl.build :user }
+  let(:new_organization) { FactoryGirl.build :organization }
+
+  it 'has a valid model' do
+    user = new_user
+    expect(user.valid?).to be true
+  end
+
+  it 'should have organizations' do
+    user = new_user
+    user.save
+    expect(user.organizations.count).to eq 0
+    user.organizations << new_organization
+    expect(user.organizations.count).to eq 1
+  end
 end
