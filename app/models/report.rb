@@ -36,6 +36,7 @@ class Report < ApplicationRecord
 
   private
 
+  # validates the date to be in the past
   def issue_date_cannot_be_in_the_future
     errors.add(:issue_date, "can't be in the future") if issue_date && issue_date.future?
   end
